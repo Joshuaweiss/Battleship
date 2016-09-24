@@ -1,0 +1,13 @@
+{
+  "files": [
+    "./typings/index.d.ts",
+    "./src/global_typings.d.ts"
+  ],
+  "compilerOptions": {
+    "target": "es5",
+    "module": "commonjs",
+    "jsx": "react",
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true
+  }
+}
