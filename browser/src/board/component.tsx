@@ -1,11 +1,13 @@
-import * as React from "react";
-import {Component} from "react";
+import {BoardRow} from "./boardRow/component";
+import {boardRowI} from "./boardRow/types";
 
-export class Board extends Component<any, {}> {
+@CSSModules(styles)
+export class Board extends React.Component<any, {board: boardRowI[]}>{
 
   render(): JSX.Element {
-    return <h1 styleName="helloWorld">Hello World</h1>;
+    return <div styleName="board">
+      {this.props.board.map((boardRow, rowIndex) => <BoardRow cells={boardRow} rowIndex={rowIndex} key={rowIndex} />)}
+    </div>;
   }
 
 }
-

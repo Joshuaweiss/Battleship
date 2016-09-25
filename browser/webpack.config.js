@@ -18,10 +18,16 @@ module.exports = {
         loader: 'style!css?minify&modules&importLoaders=1&localIdentName=[name]__[local]___[hash:base64:5]!sass',
       },
     ],
+    preLoaders: [
+      {
+        test: /\.tsx$/,
+        loader: 'baggage?styles.scss=styles',
+      },
+    ],
   },
   resolve: {
     root: path.resolve('./src'),
-    extensions: ["", ".js", ".ts", ".tsx", ".scss"]
+    extensions: ["", ".js", ".ts", ".tsx", ".scss", ".d.ts"]
   },
   plugins: [
   ],
