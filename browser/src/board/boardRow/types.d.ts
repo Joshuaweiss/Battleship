@@ -1,5 +1,3 @@
 import {boardCellI} from "./boardCell/types";
 
-export type boardRowI = {
-  cells: boardCellI[];
-}
+export type rowCellsI = boardCellI[];

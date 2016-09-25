@@ -1,11 +1,8 @@
-import {boardRowI} from "./types";
+import {rowCellsI} from "./types";
 import {BoardCell} from "./boardCell/component";
 
-const boardCell = (rowIndex) => (boardCell, columnIndex) => <BoardCell {...boardCell} key={columnIndex} coordinates={[columnIndex, rowIndex]} />;
+const boardCell = (rowIndex) => (boardCell, columnIndex) => <BoardCell boardCell={boardCell} key={columnIndex} coordinates={{x: columnIndex, y: rowIndex}} />;
 
-@CSSModules(styles)
-export class BoardRow extends React.Component<any, boardRowI> {
-  render(): JSX.Element {
-    return <div styleName="boardRow">{ this.props.cells.map(boardCell(this.props.rowIndex)) }</div>;
-  }
-}
+export const BoardRow = CSSModules(styles)((props: {rowCells: rowCellsI, rowIndex: number}): JSX.Element => {
+  return <div styleName="boardRow">{ props.rowCells.map(boardCell(props.rowIndex)) }</div>;
+});
