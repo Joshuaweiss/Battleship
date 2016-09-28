@@ -1,3 +1,3 @@
-export type boardCellI = {
+export type IBoardCell = {
   ship: boolean;
 };

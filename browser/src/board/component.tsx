@@ -1,8 +1,10 @@
 import {BoardRow} from "./boardRow/component";
-import {rowCellsI} from "./boardRow/types";
+import {IBoard} from "./types";
 
-export const Board = CSSModules(styles)((params: {board: rowCellsI[]}) => {
-  return <div styleName="board">
-    {params.board.map((boardRow, rowIndex) => <BoardRow rowCells={boardRow} rowIndex={rowIndex} key={rowIndex} />)}
-  </div>;
-});
+export const Board = CSSModules(styles)((params: {board: IBoard, coordinateClick: (x) => (y) => () => void}) => (
+  <div styleName="board">{
+    params.board.map(
+      (boardRow, rowIndex) => <BoardRow coordinateClick={params.coordinateClick(rowIndex)} boardRow={boardRow} key={rowIndex} />
+    )
+  }</div>
+));

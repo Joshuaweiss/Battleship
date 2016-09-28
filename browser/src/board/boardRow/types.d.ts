@@ -1,3 +1,3 @@
-import {boardCellI} from "./boardCell/types";
+import {IBoardCell} from "./boardCell/types";
 
-export type rowCellsI = boardCellI[];
+export type IBoardRow = IBoardCell[];

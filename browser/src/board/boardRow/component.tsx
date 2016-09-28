@@ -1,8 +1,13 @@
-import {rowCellsI} from "./types";
+import {IBoardRow} from "./types";
 import {BoardCell} from "./boardCell/component";
 
-const boardCell = (rowIndex) => (boardCell, columnIndex) => <BoardCell boardCell={boardCell} key={columnIndex} coordinates={{x: columnIndex, y: rowIndex}} />;
 
-export const BoardRow = CSSModules(styles)((props: {rowCells: rowCellsI, rowIndex: number}): JSX.Element => {
-  return <div styleName="boardRow">{ props.rowCells.map(boardCell(props.rowIndex)) }</div>;
+export const BoardRow = CSSModules(styles)((props: {boardRow: IBoardRow, coordinateClick: (y: number) => () => void}): JSX.Element => {
+  return <div styleName="boardRow">{
+    props.boardRow.map(
+      (boardCell, columnIndex) => {
+        return <BoardCell boardCell={boardCell} key={columnIndex} coordinateClick={props.coordinateClick(columnIndex)} />;
+      }
+    )
+  }</div>;
 });
