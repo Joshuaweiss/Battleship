@@ -1,4 +1,4 @@
-import {ADD_SHIP} from "../../reducer";
+import {ADD_SHIP} from "../../../gameState/reducer";
 
 export const boardCellReducer = (state, action) => {
   switch (action.type) {

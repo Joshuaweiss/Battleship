@@ -1,4 +1,4 @@
-import {ADD_SHIP} from "../reducer";
+import {ADD_SHIP} from "../../gameState/reducer";
 
 import {boardCellReducer} from "./boardCell/reducer";
 

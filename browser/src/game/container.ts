@@ -2,7 +2,7 @@ import {connect} from "react-redux";
 import {bindActionCreators} from "redux";
 
 import {Game} from "./component";
-import {addShip} from "../board/reducer";
+import {addShip} from "../gameState/reducer";
 
 const stateToProps = (state) => state;
 const dispatchToProps = (dispatch) => ({

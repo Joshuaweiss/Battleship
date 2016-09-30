@@ -1,12 +1,7 @@
 import {boardRowReducer} from "./boardRow/reducer";
-
-export const ADD_SHIP = "ADD_SHIP";
-
-export const addShip = (coordinates) => ({
-  type: ADD_SHIP,
-  coordinates,
-});
-
+import {IBoard} from "./types";
+import {CPU_PLACED_SHIPS} from "../gameState/reducer";
+import {ADD_SHIP} from "../gameState/reducer";
 
 const initialState = _.range(0, 5).map(() =>
   _.range(0, 5).map(() => ({
@@ -16,10 +11,11 @@ const initialState = _.range(0, 5).map(() =>
   }))
 );
 
-export const boardReducer = (state = initialState, action) => {
+export const boardReducer = (state = initialState, action): IBoard => {
   switch (action.type) {
     case ADD_SHIP:
       return state.map((boardRow, rowIndex) => (rowIndex == action.coordinates.x) ? boardRowReducer(boardRow, action) : boardRow);
+    case CPU_PLACED_SHIPS:
     default:
       return state;
   }
