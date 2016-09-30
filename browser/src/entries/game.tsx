@@ -14,9 +14,12 @@ import {GameReducer} from "../game/reducer";
 
 export const store = createStore(GameReducer);
 
-ReactDOM.render(
-  <Provider store={store}>
-    <GameContainer />
-  </Provider>,
-  document.getElementById('app')
-);
+document.addEventListener( 'DOMContentLoaded', function () {
+  ReactDOM.render(
+    <Provider store={store}>
+      <GameContainer />
+    </Provider>,
+    document.getElementById('app')
+  )
+}, false );
+

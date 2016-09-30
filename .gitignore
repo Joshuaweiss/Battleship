@@ -1,5 +1,8 @@
+*.swp
+npm-debug.log
 browser/node_modules
 browser/dist
 browser/typings
-*.swp
-npm-debug.log
+server/tmp
+server/log
+server/public/assets/*

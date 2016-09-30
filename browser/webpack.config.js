@@ -1,10 +1,12 @@
 var path = require("path");
 var webpack = require("webpack");
 
+var AssetsPlugin = require('assets-webpack-plugin');
+
 module.exports = {
   entry: "./src/entries/game.tsx",
   output: {
-    path: "./dist",
+    path: "./dist/main",
     filename: "[name].js"
   },
   module: {
@@ -30,5 +32,6 @@ module.exports = {
     extensions: ["", ".js", ".ts", ".tsx", ".scss", ".d.ts"]
   },
   plugins: [
+    new AssetsPlugin({path: path.join('..', 'server', 'public', 'assets', 'main')}),
   ],
 };
