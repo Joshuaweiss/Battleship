@@ -1,7 +1,8 @@
 {
   "name": "battleship",
   "dependencies": {
-    "lodash": "registry:npm/lodash#4.0.0+20160723033700"
+    "lodash": "registry:npm/lodash#4.0.0+20160723033700",
+    "redux-thunk": "registry:npm/redux-thunk#2.0.0+20160525185520"
   },
   "globalDependencies": {
     "react": "registry:dt/react#0.14.0+20160923124221",

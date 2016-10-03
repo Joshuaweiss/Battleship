@@ -1,4 +1,5 @@
 import {IGameState} from "./types";
+import {Fetch} from "../utils/fetch";
 
 //actions type
 export const ADD_SHIP = "ADD_SHIP";
@@ -50,16 +51,23 @@ export const guess_response = (board) => ({
   board
 });
 
-export const submitGuess = (coordinates) => (
-  (dispatch, getState) => {
-    dispatch()
-  }
-);
+
+//This is an open issue in rails https://github.com/rails/rails/issues/23640
+const fixNestedArraysForRails(board) => board.reduce((total, row) => total.concat(row));
 
 export const submitShips = () => (
   (dispatch, getState) => {
     if (getState().gameState.phase == WAITING_FOR_CPU) {
-      dispatch()
+      Fetch.post("/game", {board: fixNestedArraysForRails(getState().board)}).then((response) => {
+        debugger
+      });
     }
+  }
+);
+
+export const submitGuess = (coordinates) => (
+  (dispatch, getState) => {
+    dispatch(addShip(coordinates))
+    dispatch(submitShips());
   }
 );

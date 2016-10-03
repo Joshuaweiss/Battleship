@@ -1,7 +1,9 @@
+import 'whatwg-fetch';
 import * as React from "react";
 import * as ReactDOM from "react-dom";
-import {createStore} from "redux";
+import {createStore, applyMiddleware} from "redux";
 import {Provider} from "react-redux";
+import thunk from "redux-thunk";
 import * as _ from "lodash";
 import * as CSSModules from "react-css-modules";
 
@@ -12,7 +14,10 @@ window["_"] = _;
 import {GameContainer} from "../game/container";
 import {GameReducer} from "../game/reducer";
 
-export const store = createStore(GameReducer);
+export const store = createStore(
+  GameReducer,
+  applyMiddleware(thunk)
+);
 
 document.addEventListener( 'DOMContentLoaded', function () {
   ReactDOM.render(

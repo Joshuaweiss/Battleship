@@ -1,6 +1,7 @@
 declare var require: any;
 declare var CSSModules: (styles: any) => <A>(component: A) => A;
 declare var _: any;
+declare var fetch: any;
 
 
 /// <reference path="react.d.ts" />
