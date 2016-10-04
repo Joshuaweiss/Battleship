@@ -6,7 +6,7 @@ const headers = {
 
 const credentials = "include";
 
-const selectData = (request) => request.then((response) => response.json);
+const selectData = (request) => request.then((response) => response.json());
 
 export const Fetch = {
   post: (url: string, data: any) => (
@@ -19,10 +19,14 @@ export const Fetch = {
       })
     )
   ),
-  //get: (url: string, data: any) => (
-  //  selectData(
-  //    fetch(url + "", {
-  //      method: "GET",
-  //      headers,
-  //)
+  get: (url: string, data: any = {}) => (
+    //TODO: query string
+    selectData(
+      fetch(url, {
+        method: "GET",
+        headers,
+        credentials,
+      })
+    )
+  )
 }

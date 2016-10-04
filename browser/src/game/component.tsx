@@ -2,7 +2,6 @@ import {Board} from "../board/component";
 import {IGame} from "./types";
 import {PLACE_SHIPS} from "../gameState/reducer";
 
-
 const coordinateClickAction = (phase, actions) => {
   switch (phase) {
     case PLACE_SHIPS:

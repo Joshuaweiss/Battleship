@@ -1,7 +1,6 @@
 import {boardRowReducer} from "./boardRow/reducer";
 import {IBoard} from "./types";
-import {CPU_PLACED_SHIPS} from "../gameState/reducer";
-import {ADD_SHIP} from "../gameState/reducer";
+import {CPU_PLACED_SHIPS, ADD_SHIP} from "../game/actions";
 
 const initialState = _.range(0, 5).map(() =>
   _.range(0, 5).map(() => ({

@@ -1,5 +1,4 @@
 import {IGameState} from "./types";
-import {Fetch} from "../utils/fetch";
 
 //actions type
 export const ADD_SHIP = "ADD_SHIP";
@@ -19,7 +18,7 @@ const initialState = {
   shipsPlaced: 0,
 };
 
-export const gameStateReducer = (state: IGameState = initialState, action): IGameState => {
+export function gameStateReducer(state: IGameState = initialState, action): IGameState {
   switch (action.type) {
     case ADD_SHIP:
       const shipsPlaced = state.shipsPlaced + 1;
@@ -35,39 +34,3 @@ export const gameStateReducer = (state: IGameState = initialState, action): IGam
       return state;
   }
 };
-
-export const addShip = (coordinates) => ({
-  type: ADD_SHIP,
-  coordinates,
-});
-
-export const cpuPlacedShips = (board) => ({
-  type: CPU_PLACED_SHIPS,
-  board
-});
-
-export const guess_response = (board) => ({
-  type: GUESS_RESPONSE,
-  board
-});
-
-
-//This is an open issue in rails https://github.com/rails/rails/issues/23640
-const fixNestedArraysForRails(board) => board.reduce((total, row) => total.concat(row));
-
-export const submitShips = () => (
-  (dispatch, getState) => {
-    if (getState().gameState.phase == WAITING_FOR_CPU) {
-      Fetch.post("/game", {board: fixNestedArraysForRails(getState().board)}).then((response) => {
-        debugger
-      });
-    }
-  }
-);
-
-export const submitGuess = (coordinates) => (
-  (dispatch, getState) => {
-    dispatch(addShip(coordinates))
-    dispatch(submitShips());
-  }
-);

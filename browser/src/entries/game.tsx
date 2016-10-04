@@ -13,6 +13,7 @@ window["_"] = _;
 
 import {GameContainer} from "../game/container";
 import {GameReducer} from "../game/reducer";
+import {getGame} from "../game/actions";
 
 export const store = createStore(
   GameReducer,
@@ -26,5 +27,7 @@ document.addEventListener( 'DOMContentLoaded', function () {
     </Provider>,
     document.getElementById('app')
   )
+
+  store.dispatch(getGame());
 }, false );
 

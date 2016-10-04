@@ -2,7 +2,7 @@ import {connect} from "react-redux";
 import {bindActionCreators} from "redux";
 
 import {Game} from "./component";
-import {submitGuess} from "../gameState/reducer";
+import {submitGuess} from "./actions";
 
 const stateToProps = (state) => state;
 const dispatchToProps = (dispatch) => ({

@@ -1,12 +1,13 @@
 {
   "name": "battleship",
   "dependencies": {
-    "lodash": "registry:npm/lodash#4.0.0+20160723033700",
-    "redux-thunk": "registry:npm/redux-thunk#2.0.0+20160525185520"
+    "index": "github:gaearon/redux-thunk/index.d.ts",
+    "lodash": "registry:npm/lodash#4.0.0+20160723033700"
   },
   "globalDependencies": {
     "react": "registry:dt/react#0.14.0+20160923124221",
     "react-css-modules": "registry:dt/react-css-modules#3.7.9+20160805170511",
-    "react-dom": "registry:dt/react-dom#0.14.0+20160412154040"
+    "react-dom": "registry:dt/react-dom#0.14.0+20160412154040",
+    "redux-thunk": "registry:dt/redux-thunk#2.1.0+20160703120921"
   }
 }

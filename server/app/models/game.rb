@@ -27,39 +27,38 @@ class Game < ApplicationRecord
         DEFAULT_CELL.merge(board_cell)
       end
     end
-    board = Game.new(
+    game = Game.new(
       board: board_cells,
       phase: GUESS,
     )
-    board.add_cpu_ships
-    board
+    game.add_cpu_ships
+    game
   end
 
 
   def add_cpu_ships
-    unused_cell_coordinates.shuffle.first(5).each do |coordinate|
+    cell_coordinates_where(ship: false).shuffle.first(5).each do |coordinate|
       set_cell_at_coordinate(coordinate, {ship: true, enemy: true, destroyed: false})
     end
   end
 
-  def unused_cell_coordinates
-    cell_coordinates_where {|cell| !cell[:ship] }
-  end
-
   def players_cell_coordinates
-    cell_coordinates_where {|cell| cell[:ship] && !cell[:enemy] }
+    cell_coordinates_where(ship: true, enemy: false)
   end
 
   def cpu_cell_coordinates
-    cell_coordinates_where {|cell| cell[:ship] && cell[:enemy] }
+    cell_coordinates_where(ship: true, enemy: true)
   end
 
   def ship_cell_coordinates
-    cell_coordinates_where {|cell| cell[:ship] }
+    cell_coordinates_where(ship: true)
   end
 
-  def cell_coordinates_where(&block)
-    (0...5).to_a.repeated_permutation(2).select {|coordinate| block.call(cell_at_coordinate(coordinate))}
+  def cell_coordinates_where(test)
+    (0...5).to_a.repeated_permutation(2).select do |coordinate|
+      cell = cell_at_coordinate(coordinate)
+      cell.to_a.all? {|key, value| !test.has_key?(key) || test[key] == value}
+    end
   end
 
   def cell_at_coordinate(coordinate)
@@ -71,8 +70,9 @@ class Game < ApplicationRecord
   end
 
   def players_have_5_ships
-    {player: players_cell_coordinates, cpu: cpu_cell_coordinates}.each do |player, player_cells|
-      errors.add(:cells, "#{player} does not have 5 ships") unless player_cells.count == 5
+    {player: false, cpu: true}.each do |player, enemy|
+      debugger
+      errors.add(:cells, "#{player} does not have 5 ships") unless cell_coordinates_where(ship: true, enemy: enemy).count == 5
     end
   end
 
