@@ -15,7 +15,7 @@ class GamesController < ApplicationController
   end
 
   def create_params
-    params.require(:game).permit(board: [:ship, :enemy, :destroyed])
+    params.require(:game).permit(:phase, board: [:ship, :enemy, :destroyed])
   end
 
 end

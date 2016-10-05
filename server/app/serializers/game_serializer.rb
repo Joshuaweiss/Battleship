@@ -1,5 +1,5 @@
 class GameSerializer < ActiveModel::Serializer
 
-  :board
+  attributes :player_board, :phase
 
 end

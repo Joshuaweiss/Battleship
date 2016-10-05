@@ -1,21 +1,22 @@
-import {GUESS_RESPONSE, WAITING_FOR_CPU} from "../gameState/reducer"
 import {Fetch} from "../utils/fetch";
 import GameApi from "./api";
 
 //actions type
 export const LOAD_GAME = "LOAD_GAME";
-export const ADD_SHIP = "ADD_SHIP";
 export const GUESS = "GUESS";
-export const CPU_PLACED_SHIPS = "CPU_PLACED_SHIPS";
+export const CPU_PLACE_SHIPS = "CPU_PLACE_SHIPS";
+export const PLAYER_PLACE_SHIP = "PLAYER_PLACE_SHIP";
+export const WAITING_FOR_CPU = "WAITING_FOR_CPU";
 export const CPU_GUESS = "CPU_GUESS";
 
-export const addShip = (coordinates) => ({
-  type: ADD_SHIP,
+
+export const playerPlaceShip = (coordinates) => ({
+  type: PLAYER_PLACE_SHIP,
   coordinates,
 });
 
 export const cpuPlacedShips = (board) => ({
-  type: CPU_PLACED_SHIPS,
+  type: CPU_PLACE_SHIPS,
   board,
 });
 
@@ -26,8 +27,13 @@ const fixNestedArraysForRails = (board) => board.reduce((total, row) => total.co
 export const getGame = () => (
   (dispatch, getState) => {
     GameApi.show().then((response) => {
-      if (response) {
-        debugger 
+      const game = response.data.attributes;
+      if (game) {
+        const responseToState = (game) => ({
+          board: game.playerBoard,
+          gameState: _.pick(game, ["phase"]),
+        });
+        dispatch(loadGame(responseToState(game)));
       }
     })
   }
@@ -35,7 +41,7 @@ export const getGame = () => (
 
 export const loadGame = (game) => ({
   type: LOAD_GAME,
-  game
+  game,
 })
 
 export const submitShips = () => (
@@ -48,9 +54,9 @@ export const submitShips = () => (
   }
 );
 
-export const submitGuess = (coordinates) => (
+export const submitShip = (coordinates) => (
   (dispatch, getState) => {
-    dispatch(addShip(coordinates))
+    dispatch(playerPlaceShip(coordinates))
     dispatch(submitShips());
   }
 )

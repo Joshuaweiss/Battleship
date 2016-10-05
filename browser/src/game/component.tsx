@@ -1,11 +1,11 @@
 import {Board} from "../board/component";
 import {IGame} from "./types";
-import {PLACE_SHIPS} from "../gameState/reducer";
+import {PLACE_SHIPS} from "../gameState/phases";
 
 const coordinateClickAction = (phase, actions) => {
   switch (phase) {
     case PLACE_SHIPS:
-      return actions.addShip;
+      return actions.playerPlaceShip;
     default:
       return () => {};
   }

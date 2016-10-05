@@ -17,9 +17,9 @@ class Game < ApplicationRecord
     destroyed: false,
   }
 
-  def self.from_board(board_cells) 
+  def self.from_board(board_cells)
     #clean input
-    board_cells.map! do |board_row| 
+    board_cells.map! do |board_row|
       board_row.map! do |board_cell|
         #keys to symbols
         board_cell = board_cell.to_h.to_a.map! {|key, value| [key.to_sym, value]}.to_h
@@ -69,9 +69,24 @@ class Game < ApplicationRecord
     board[coordinate[0]][coordinate[1]] = cell
   end
 
+  #front end has access to a censored board
+  def player_board
+    censored_board(
+      cell_coordinates_where({ship: true, enemy: false}) +
+      cell_coordinates_where({ship: true, enemy: true, destroyed: true})
+    )
+  end
+
+  def censored_board(whitelist)
+    board.map.with_index do |row, row_index|
+      row.map.with_index do |cell, cell_index|
+        whitelist.include?([cell_index, row_index]) ? cell : {}
+      end
+    end
+  end
+
   def players_have_5_ships
     {player: false, cpu: true}.each do |player, enemy|
-      debugger
       errors.add(:cells, "#{player} does not have 5 ships") unless cell_coordinates_where(ship: true, enemy: enemy).count == 5
     end
   end
