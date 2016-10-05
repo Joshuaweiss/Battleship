@@ -33,7 +33,7 @@ const fixNestedArraysForRails = (board) => board.reduce((total, row) => total.co
 export const getGame = () => (
   (dispatch, getState) => {
     GameApi.show().then((response) => {
-      const game = response.data.attributes;
+      const game = response && response.data.attributes;
       if (game) {
         dispatch(loadGame(responseToState(game)));
       }
@@ -46,12 +46,21 @@ export const loadGame = (game) => ({
   game,
 })
 
+const countShips = (board) => (
+  _.sum(
+    board.map((row) =>
+      row.filter((cell) => cell.ship && !cell.enemy).length
+    )
+  )
+)
+
 export const submitShips = () => (
   (dispatch, getState) => {
-    if (getState().gameState.phase == WAITING_FOR_CPU) {
-      GameApi.create(getState()).then((game) =>
-        dispatch(loadGame(game))
-      );
+    if (countShips(getState().board) === 5) {
+      GameApi.create(getState()).then((response) => {
+        const game = response.data.attributes;
+        dispatch(loadGame(responseToState(game)));
+      });
     }
   }
 );

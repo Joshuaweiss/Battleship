@@ -62,11 +62,11 @@ class Game < ApplicationRecord
   end
 
   def cell_at_coordinate(coordinate)
-    board[coordinate[0]][coordinate[1]]
+    board[coordinate[1]][coordinate[0]]
   end
 
   def set_cell_at_coordinate(coordinate, cell)
-    board[coordinate[0]][coordinate[1]] = cell
+    board[coordinate[1]][coordinate[0]] = cell
   end
 
   #front end has access to a censored board

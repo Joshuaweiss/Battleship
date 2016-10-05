@@ -5,7 +5,7 @@ import {PLACE_SHIPS} from "../gameState/phases";
 const coordinateClickAction = (phase, actions) => {
   switch (phase) {
     case PLACE_SHIPS:
-      return actions.playerPlaceShip;
+      return actions.submitShip;
     default:
       return () => {};
   }
