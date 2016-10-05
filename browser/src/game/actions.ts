@@ -71,3 +71,12 @@ export const submitShip = (coordinates) => (
     dispatch(submitShips());
   }
 )
+
+export const submitGuess = (coordinate) => (
+  (dispatch, getState) => {
+    GameApi.guess([coordinate.x, coordinate.y]).then((response) => {
+      const game = response.data.attributes;
+      dispatch(loadGame(responseToState(game)));
+    })
+  }
+)

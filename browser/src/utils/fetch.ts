@@ -19,6 +19,16 @@ export const Fetch = {
       })
     )
   ),
+  patch: (url: string, data: any) => (
+    selectData(
+      fetch(url, {
+        method: "PATCH",
+        body: JSON.stringify(data),
+        credentials,
+        headers,
+      })
+    )
+  ),
   get: (url: string, data: any = {}) => (
     //TODO: query string
     selectData(

@@ -14,8 +14,22 @@ class GamesController < ApplicationController
     render json: game
   end
 
+  def update
+    game = current_user.games.not_over.first
+    if game.update(update_params)
+      render json: game
+    else
+      raise "CHECK"
+      #render 402
+    end
+  end
+
   def create_params
     params.require(:game).permit(:phase, board: [:ship, :enemy, :destroyed])
+  end
+
+  def update_params
+    params.require(:game).permit(guess: [])
   end
 
 end

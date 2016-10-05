@@ -10,6 +10,7 @@ class Game < ApplicationRecord
 
   #phases
   GUESS = "GUESS"
+  OVER = "OVER"
 
   DEFAULT_CELL = {
     ship: false,
@@ -42,18 +43,6 @@ class Game < ApplicationRecord
     end
   end
 
-  def players_cell_coordinates
-    cell_coordinates_where(ship: true, enemy: false)
-  end
-
-  def cpu_cell_coordinates
-    cell_coordinates_where(ship: true, enemy: true)
-  end
-
-  def ship_cell_coordinates
-    cell_coordinates_where(ship: true)
-  end
-
   def cell_coordinates_where(test)
     (0...5).to_a.repeated_permutation(2).select do |coordinate|
       cell = cell_at_coordinate(coordinate)
@@ -62,7 +51,7 @@ class Game < ApplicationRecord
   end
 
   def cell_at_coordinate(coordinate)
-    board[coordinate[1]][coordinate[0]]
+    board[coordinate[1]][coordinate[0]].dup
   end
 
   def set_cell_at_coordinate(coordinate, cell)
@@ -81,6 +70,39 @@ class Game < ApplicationRecord
     board.map.with_index do |row, row_index|
       row.map.with_index do |cell, cell_index|
         whitelist.include?([cell_index, row_index]) ? cell : {}
+      end
+    end
+  end
+
+  def guess=(coordinate)
+    player_guess(coordinate)
+    check_if_game_is_over
+    return if over?
+    cpu_guess
+    check_if_game_is_over
+  end
+
+  def player_guess(coordinate)
+    cell = cell_at_coordinate(coordinate)
+    return unless cell[:ship] && cell[:enemy]
+    cell[:destroyed] = true
+    set_cell_at_coordinate(coordinate, cell)
+  end
+
+  def cpu_guess
+    coordinate = (cell_coordinates_where({ship: false}) + cell_coordinates_where({ship: true, enemy: false})).sample
+    cell = cell_at_coordinate(coordinate)
+    return unless cell[:ship] && !cell[:enemy]
+    cell[:destroyed] = true 
+    set_cell_at_coordinate(coordinate, cell)
+  end
+
+  def check_if_game_is_over
+    [true, false].each do |is_enemy_destroyed|
+      if cell_coordinates_where({ship: true, enemy: is_enemy_destroyed, destroyed: true}).length == 5
+        self.over = true
+        self.won = is_enemy_destroyed
+        self.phase = OVER
       end
     end
   end

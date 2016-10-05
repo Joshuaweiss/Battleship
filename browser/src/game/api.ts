@@ -12,6 +12,8 @@ const cleanBoard = ({board, gameState}) => ({
 const GameApi = {
   show: () => Fetch.get(base),
   create: (game) => Fetch.post(base, {game: cleanBoard(game)}),
+  update: (game) => Fetch.patch(base, {game}),
+  guess: (guess) => GameApi.update({guess}),
 };
 
 export default GameApi;
