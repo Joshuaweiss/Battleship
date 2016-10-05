@@ -21,6 +21,12 @@ export const cpuPlacedShips = (board) => ({
 });
 
 
+const responseToState = (game) => ({
+  board: game.playerBoard,
+  gameState: _.pick(game, ["phase"]),
+});
+
+
 //This is an open issue in rails https://github.com/rails/rails/issues/23640
 const fixNestedArraysForRails = (board) => board.reduce((total, row) => total.concat(row));
 
@@ -29,10 +35,6 @@ export const getGame = () => (
     GameApi.show().then((response) => {
       const game = response.data.attributes;
       if (game) {
-        const responseToState = (game) => ({
-          board: game.playerBoard,
-          gameState: _.pick(game, ["phase"]),
-        });
         dispatch(loadGame(responseToState(game)));
       }
     })
@@ -47,9 +49,9 @@ export const loadGame = (game) => ({
 export const submitShips = () => (
   (dispatch, getState) => {
     if (getState().gameState.phase == WAITING_FOR_CPU) {
-      GameApi.create(getState()).then((response) => {
-        debugger
-      });
+      GameApi.create(getState()).then((game) =>
+        dispatch(loadGame(game))
+      );
     }
   }
 );
