@@ -22,7 +22,8 @@ export const cpuPlacedShips = (board) => ({
 
 
 const responseToState = (game) => ({
-  board: game.playerBoard,
+  playerBoard: game.playerBoard,
+  cpuBoard: game.cpuBoard,
   gameState: (Object.keys(game).length === 0) ? undefined : _.pick(game, ["phase", "won"]),
 });
 
@@ -49,14 +50,14 @@ export const loadGame = (game) => ({
 const countShips = (board) => (
   _.sum(
     board.map((row) =>
-      row.filter((cell) => cell.ship && !cell.enemy).length
+      row.filter((cell) => cell.ship).length
     )
   )
 );
 
 export const submitShips = () => (
   (dispatch, getState) => {
-    if (countShips(getState().board) === 5) {
+    if (countShips(getState().playerBoard) === 5) {
       GameApi.create(getState()).then((response) => {
         const game = response.data.attributes;
         dispatch(loadGame(game));

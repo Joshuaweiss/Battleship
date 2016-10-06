@@ -8,8 +8,6 @@ const initialState = {
 
 export const gameStateReducer = (state: IGameState = initialState, action): IGameState => {
   switch (action.type) {
-    case LOAD_GAME:
-      return action.game.gameState || initialState;
     default:
       return state;
   }

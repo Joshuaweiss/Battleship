@@ -4,8 +4,9 @@ import {Fetch} from "../utils/fetch";
 const base = "/game";
 
 //remove when rails bug with nested arrays is fixed
-const cleanBoard = ({board, gameState}) => ({
-  board: board.reduce((total, row) => total.concat(row)),
+const cleanBoard = ({playerBoard, cpuBoard, gameState}) => ({
+  playerBoard: playerBoard.reduce((total, row) => total.concat(row)),
+  cpuBoard: cpuBoard.reduce((total, row) => total.concat(row)),
   gameState
 });
 

@@ -1,8 +1,22 @@
+.boardContainer {
+  flex: 1;
+  position: relative;
+  &:before {
+    display: block;
+    content: "";
+    width: 100%;
+    padding-top: 100%;
+  }
+  > .board {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+  }
+}
+
 .board {
   display: flex;
   flex-direction: column;
-  width: 500px;
-  height: 500px;
 }
-
-
