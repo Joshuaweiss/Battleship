@@ -1,4 +1,4 @@
-rev_manifest_path = 'public/assets/main/webpack-assets.json'
+rev_manifest_path = 'public/assets/webpack/webpack-assets.json'
 
 if File.exist?(rev_manifest_path)
   ::WEBPACK_MANIFEST = JSON.parse(File.read(rev_manifest_path))
