@@ -8,27 +8,23 @@ const credentials = "include";
 
 const selectData = (request) => request.then((response) => response.json());
 
+const bodyMethods = (method) => (
+  (url, data) => (
+    selectData(
+      fetch(url, {
+        method: method,
+        body: JSON.stringify(data),
+        credentials,
+        headers,
+      })
+    )
+  )
+)
+
 export const Fetch = {
-  post: (url: string, data: any) => (
-    selectData(
-      fetch(url, {
-        method: "POST",
-        body: JSON.stringify(data),
-        credentials,
-        headers,
-      })
-    )
-  ),
-  patch: (url: string, data: any) => (
-    selectData(
-      fetch(url, {
-        method: "PATCH",
-        body: JSON.stringify(data),
-        credentials,
-        headers,
-      })
-    )
-  ),
+  post: bodyMethods("POST"),
+  patch: bodyMethods("PATCH"),
+  delete: bodyMethods("DELETE"),
   get: (url: string, data: any = {}) => (
     //TODO: query string
     selectData(
@@ -38,5 +34,5 @@ export const Fetch = {
         credentials,
       })
     )
-  )
+  ),
 }
