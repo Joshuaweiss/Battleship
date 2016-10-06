@@ -9,7 +9,7 @@ const credentials = "include";
 const selectData = (request) => request.then((response) => response.json());
 
 const bodyMethods = (method) => (
-  (url, data) => (
+  (url, data = {}) => (
     selectData(
       fetch(url, {
         method: method,
