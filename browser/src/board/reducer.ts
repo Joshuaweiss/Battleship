@@ -13,7 +13,7 @@ const initialState = _.range(0, 5).map(() =>
 export const boardReducer = (state: IBoard = initialState, action): IBoard => {
   switch (action.type) {
     case LOAD_GAME:
-      return action.game.board;
+      return action.game.board || initialState;
     case PLAYER_PLACE_SHIP:
       return state.map((boardRow, rowIndex) => (rowIndex == action.coordinates.y) ? boardRowReducer(boardRow, action) : boardRow);
     case CPU_PLACE_SHIPS:

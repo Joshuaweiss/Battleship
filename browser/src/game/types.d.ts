@@ -6,5 +6,6 @@ export type IGame = {
   gameState?: IGameState,
   actions?: {
     addShip?: (coordinate: {x: number, y: number}) => void,
+    newGame?: () => void,
   },
 };

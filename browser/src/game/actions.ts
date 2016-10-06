@@ -23,7 +23,7 @@ export const cpuPlacedShips = (board) => ({
 
 const responseToState = (game) => ({
   board: game.playerBoard,
-  gameState: _.pick(game, ["phase"]),
+  gameState: (Object.keys(game).length === 0) ? undefined : _.pick(game, ["phase", "won"]),
 });
 
 
@@ -35,16 +35,16 @@ export const getGame = () => (
     GameApi.show().then((response) => {
       const game = response && response.data.attributes;
       if (game) {
-        dispatch(loadGame(responseToState(game)));
+        dispatch(loadGame(game));
       }
     })
   }
-)
+);
 
 export const loadGame = (game) => ({
   type: LOAD_GAME,
-  game,
-})
+  game: responseToState(game),
+});
 
 const countShips = (board) => (
   _.sum(
@@ -52,14 +52,14 @@ const countShips = (board) => (
       row.filter((cell) => cell.ship && !cell.enemy).length
     )
   )
-)
+);
 
 export const submitShips = () => (
   (dispatch, getState) => {
     if (countShips(getState().board) === 5) {
       GameApi.create(getState()).then((response) => {
         const game = response.data.attributes;
-        dispatch(loadGame(responseToState(game)));
+        dispatch(loadGame(game));
       });
     }
   }
@@ -70,13 +70,15 @@ export const submitShip = (coordinates) => (
     dispatch(playerPlaceShip(coordinates))
     dispatch(submitShips());
   }
-)
+);
 
 export const submitGuess = (coordinate) => (
   (dispatch, getState) => {
     GameApi.guess([coordinate.x, coordinate.y]).then((response) => {
       const game = response.data.attributes;
-      dispatch(loadGame(responseToState(game)));
+      dispatch(loadGame(game));
     })
   }
-)
+);
+
+export const newGame = () => loadGame({});

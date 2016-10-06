@@ -1,4 +1,5 @@
 import {Board} from "../board/component";
+import {GameState} from "../gameState/component";
 import {IGame} from "./types";
 import {PLACE_SHIPS, GUESS} from "../gameState/phases";
 
@@ -17,5 +18,8 @@ const coordinateThroughView = (funk) => (y) => (x) => () => funk({x, y});
 
 export const Game = (props: IGame) => {
   const coordinateClick = coordinateThroughView(coordinateClickAction(props.gameState.phase, props.actions));
-  return <Board board={props.board} coordinateClick={coordinateClick}></Board>;
+  return <div>
+    <Board board={props.board} coordinateClick={coordinateClick} />
+    <GameState gameState={props.gameState} newGame={props.actions.newGame} />
+  </div>;
 };
