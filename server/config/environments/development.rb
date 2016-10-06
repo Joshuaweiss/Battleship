@@ -48,7 +48,7 @@ Rails.application.configure do
 
   config.action_mailer.default_url_options = { host: 'localhost', port: 3000 }
 
-  config.action_controller.asset_host = "http://localhost:8080" unless ENV["USE_BUILT_ASSETS"]
-  ActionView::Helpers::AssetUrlHelper::ASSET_PUBLIC_DIRECTORIES[:javascript] = (ENV["USE_BUILT_ASSETS"] ? "/assets/webpack" : "")
+  config.action_controller.asset_host = "http://localhost:8080" if ENV["USE_DEV_SERVER"]
+  ActionView::Helpers::AssetUrlHelper::ASSET_PUBLIC_DIRECTORIES[:javascript] = (!ENV["USE_DEV_SERVER"] ? "/assets/webpack" : "")
 
 end
