@@ -1,0 +1,11 @@
+.headers {
+  display: flex;
+  justify-content: space-between;
+  flex-direction: row;
+
+  & > div {
+    display: inline-block;
+    font-size: 30px;
+  }
+}
+

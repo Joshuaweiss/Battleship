@@ -1,5 +1,5 @@
 import {IBoardCell} from "./types";
-import * as classNames from "classnames";
+var classNames = require("classnames");
 
 const empty = (click) => <div onClick={click} styleName="empty"/>;
 

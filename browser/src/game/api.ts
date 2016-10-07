@@ -10,10 +10,22 @@ const cleanBoard = ({playerBoard, cpuBoard, gameState}) => ({
   gameState
 });
 
+const responseToState = (response) => {
+  if (!(response && response.data && response.data.attributes)) {
+    return null;
+  }
+  const game = response.data.attributes;
+  return {
+    playerBoard: game.playerBoard,
+    cpuBoard: game.cpuBoard,
+    gameState: (Object.keys(game).length === 0) ? undefined : _.pick(game, ["phase", "won"]),
+  };
+};
+
 const GameApi = {
-  show: () => Fetch.get(base),
-  create: (game) => Fetch.post(base, {game: cleanBoard(game)}),
-  update: (game) => Fetch.patch(base, {game}),
+  show: () => Fetch.get(base).then(responseToState),
+  create: (game) => Fetch.post(base, {game: cleanBoard(game)}).then(responseToState),
+  update: (game) => Fetch.patch(base, {game}).then(responseToState),
   guess: (guess) => GameApi.update({guess}),
   destroy: () => Fetch.delete(base),
 };

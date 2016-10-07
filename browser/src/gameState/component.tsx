@@ -5,8 +5,6 @@ import {
   OVER,
 } from "./phases";
 
-import * as classNames from "classnames";
-
 const genMessageInfo = (gameState) => {
   switch (gameState.phase) {
     case PLACE_SHIPS:
@@ -16,7 +14,7 @@ const genMessageInfo = (gameState) => {
       }
     case GUESS:
       return {
-        message: "Can you guess where CPU placed their ship?",
+        message: "Can you guess where CPU placed their ships?",
         style: "messageRight",
       };
     case OVER:
@@ -37,16 +35,16 @@ const genMessageInfo = (gameState) => {
   }
 };
 
-const Message = (props) => {
+const Message = CSSModules(styles)((props) => {
   const messageInfo = genMessageInfo(props.gameState);
   return <div styleName={messageInfo.style}>{messageInfo.message}</div>;
-};
+});
 
 export const GameState = CSSModules(styles)((props) => {
-  <div styleName="message">
+  return <div styleName="message">
     <Message gameState={props.gameState}/>
     {
-      (props.gameState.phase == OVER) ? <a onClick={props.newGame}>{"Click here to start a new game"}</a> : ""
+      (props.gameState.phase == OVER) ? <a styleName="newGame" onClick={props.newGame}>{"Click here to start a new game"}</a> : ""
     }
   </div>
 });

@@ -1,5 +1,6 @@
 import {Board} from "../board/component";
 import {GameState} from "../gameState/component";
+import {BoardHeaders} from "../boardHeaders/component";
 import {IGame} from "./types";
 import {PLACE_SHIPS, GUESS} from "../gameState/phases";
 
@@ -34,7 +35,9 @@ const coordinateThroughView = (funk) => (y) => (x) => () => funk({x, y});
 
 export const Game = CSSModules(styles)((props: IGame) => {
   const coordinateClick = makeCoordinateClickActions(props.gameState.phase, props.actions);
-  return <div>
+  return <div styleName="game">
+    <h1 styleName="header">Battleship!</h1>
+    <BoardHeaders />
     <div styleName="boards">
       <Board board={props.playerBoard} coordinateClick={coordinateThroughView(coordinateClick.playerBoard)} />
       <div styleName="spacer" />

@@ -1,5 +1,6 @@
 .boardContainer {
   flex: 1;
+  max-width: 600px;
   position: relative;
   &:before {
     display: block;
