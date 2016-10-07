@@ -1,7 +1,6 @@
 *.swp
 npm-debug.log
 browser/node_modules
-browser/dist
 browser/typings
 server/tmp
 server/log

@@ -58,8 +58,8 @@
 	window["React"] = React;
 	window["_"] = _;
 	var container_1 = __webpack_require__(350);
-	var reducer_1 = __webpack_require__(370);
-	var actions_1 = __webpack_require__(367);
+	var reducer_1 = __webpack_require__(378);
+	var actions_1 = __webpack_require__(374);
 	var composeEnhancers = window["__REDUX_DEVTOOLS_EXTENSION_COMPOSE__"] || redux_1.compose;
 	exports.store = redux_1.createStore(reducer_1.GameReducer, composeEnhancers(redux_1.applyMiddleware(redux_thunk_1.default)));
 	document.addEventListener('DOMContentLoaded', function () {
@@ -45699,7 +45699,7 @@
 	var react_redux_1 = __webpack_require__(187);
 	var redux_1 = __webpack_require__(173);
 	var component_1 = __webpack_require__(351);
-	var actions_1 = __webpack_require__(367);
+	var actions_1 = __webpack_require__(374);
 	var stateToProps = function (state) { return state; };
 	var dispatchToProps = function (dispatch) { return ({
 	    actions: redux_1.bindActionCreators({ submitShip: actions_1.submitShip, submitGuess: actions_1.submitGuess, newGame: actions_1.newGame }, dispatch),
@@ -45715,23 +45715,39 @@
 	/* injects from baggage-loader */
 	var styles = __webpack_require__(352);
 	var component_1 = __webpack_require__(356);
-	var component_2 = __webpack_require__(365);
-	var phases_1 = __webpack_require__(366);
-	var coordinateClickAction = function (phase, actions) {
+	var component_2 = __webpack_require__(366);
+	var component_3 = __webpack_require__(371);
+	var phases_1 = __webpack_require__(369);
+	var noop = function () { };
+	var makeCoordinateClickActions = function (phase, actions) {
 	    switch (phase) {
 	        case phases_1.PLACE_SHIPS:
-	            return actions.submitShip;
+	            return {
+	                playerBoard: actions.submitShip,
+	                cpuBoard: noop,
+	            };
 	        case phases_1.GUESS:
-	            return actions.submitGuess;
+	            return {
+	                playerBoard: noop,
+	                cpuBoard: actions.submitGuess,
+	            };
 	        default:
-	            return function () { };
+	            return {
+	                playerBoard: noop,
+	                cpuBoard: noop,
+	            };
 	    }
 	};
 	var coordinateThroughView = function (funk) { return function (y) { return function (x) { return function () { return funk({ x: x, y: y }); }; }; }; };
 	exports.Game = CSSModules(styles)(function (props) {
-	    var coordinateClick = coordinateThroughView(coordinateClickAction(props.gameState.phase, props.actions));
-	    return React.createElement("div", null, 
-	        React.createElement(component_1.Board, {styleName: "board", board: props.board, coordinateClick: coordinateClick}), 
+	    var coordinateClick = makeCoordinateClickActions(props.gameState.phase, props.actions);
+	    return React.createElement("div", {styleName: "game"}, 
+	        React.createElement("h1", {styleName: "header"}, "Battleship!"), 
+	        React.createElement(component_3.BoardHeaders, null), 
+	        React.createElement("div", {styleName: "boards"}, 
+	            React.createElement(component_1.Board, {board: props.playerBoard, coordinateClick: coordinateThroughView(coordinateClick.playerBoard)}), 
+	            React.createElement("div", {styleName: "spacer"}), 
+	            React.createElement(component_1.Board, {board: props.cpuBoard, coordinateClick: coordinateThroughView(coordinateClick.cpuBoard)})), 
 	        React.createElement(component_2.GameState, {gameState: props.gameState, newGame: props.actions.newGame}));
 	});
 
@@ -45771,11 +45787,14 @@
 
 
 	// module
-	exports.push([module.id, ".styles__board___3rNL9 {\n  margin: auto; }\n", ""]);
+	exports.push([module.id, ".styles__header___4lCu1 {\n  font-size: 50px;\n  margin: auto;\n  text-align: center; }\n\n.styles__game___16nJm {\n  padding: 80px;\n  font-family: \"Roboto\"; }\n\n.styles__boards___3WKC7 {\n  display: flex;\n  flex-direction: row;\n  justify-content: space-between; }\n\n.styles__spacer___1HqB8 {\n  width: 30px; }\n", ""]);
 
 	// exports
 	exports.locals = {
-		"board": "styles__board___3rNL9"
+		"header": "styles__header___4lCu1",
+		"game": "styles__game___16nJm",
+		"boards": "styles__boards___3WKC7",
+		"spacer": "styles__spacer___1HqB8"
 	};
 
 /***/ },
@@ -46094,7 +46113,9 @@
 	/* injects from baggage-loader */
 	var styles = __webpack_require__(357);
 	var component_1 = __webpack_require__(359);
-	exports.Board = CSSModules(styles)(function (props) { return (React.createElement("div", {styleName: "board"}, props.board.map(function (boardRow, rowIndex) { return React.createElement(component_1.BoardRow, {coordinateClick: props.coordinateClick(rowIndex), boardRow: boardRow, key: rowIndex}); }))); });
+	exports.Board = CSSModules(styles)(function (props) { return (React.createElement("div", {styleName: "boardContainer"}, 
+	    React.createElement("div", {styleName: "board"}, props.board.map(function (boardRow, rowIndex) { return React.createElement(component_1.BoardRow, {coordinateClick: props.coordinateClick(rowIndex), boardRow: boardRow, key: rowIndex}); }))
+	)); });
 
 
 /***/ },
@@ -46132,10 +46153,11 @@
 
 
 	// module
-	exports.push([module.id, ".styles__board___2EVMN {\n  display: flex;\n  flex-direction: column;\n  width: 500px;\n  height: 500px; }\n", ""]);
+	exports.push([module.id, ".styles__boardContainer___1Rvol {\n  flex: 1;\n  max-width: 600px;\n  position: relative; }\n  .styles__boardContainer___1Rvol:before {\n    display: block;\n    content: \"\";\n    width: 100%;\n    padding-top: 100%; }\n  .styles__boardContainer___1Rvol > .styles__board___2EVMN {\n    position: absolute;\n    top: 0;\n    left: 0;\n    right: 0;\n    bottom: 0; }\n\n.styles__board___2EVMN {\n  display: flex;\n  flex-direction: column; }\n", ""]);
 
 	// exports
 	exports.locals = {
+		"boardContainer": "styles__boardContainer___1Rvol",
 		"board": "styles__board___2EVMN"
 	};
 
@@ -46203,12 +46225,18 @@
 	"use strict";
 	/* injects from baggage-loader */
 	var styles = __webpack_require__(363);
+	var classNames = __webpack_require__(365);
 	var empty = function (click) { return React.createElement("div", {onClick: click, styleName: "empty"}); };
-	var ship = function (ship) { return (React.createElement("div", {styleName: ship.destroyed ? "destroyed" : ""}, 
-	    React.createElement("div", {styleName: "ship"}, ship.enemy ? "V" : "^")
-	)); };
+	var ship = function (cell) {
+	    return React.createElement("div", {styleName: "ship"}, cell.enemy ? "V" : "^");
+	};
 	exports.BoardCell = CSSModules(styles)(function (props) {
-	    return React.createElement("div", {styleName: "boardCell"}, (props.boardCell.ship) ? ship(props.boardCell) : empty(props.coordinateClick));
+	    var cellStyle = classNames(styles.boardCell, (_a = {},
+	        _a[styles.destroyed] = props.boardCell.destroyed,
+	        _a
+	    ));
+	    return React.createElement("div", {className: cellStyle}, (props.boardCell.ship) ? ship(props.boardCell) : empty(props.coordinateClick));
+	    var _a;
 	});
 
 
@@ -46247,7 +46275,7 @@
 
 
 	// module
-	exports.push([module.id, ".styles__boardCell___1Cr_E {\n  border: 1px solid black;\n  position: relative;\n  flex: 1; }\n\n.styles__ship___1Qj4U {\n  position: absolute;\n  top: 60%;\n  left: 50%;\n  transform: translate(-50%, -50%);\n  font-size: 64px; }\n\n.styles__empty___1n50P {\n  height: 100%;\n  cursor: pointer; }\n\n.styles__destroyed___LBC24 {\n  color: red; }\n", ""]);
+	exports.push([module.id, ".styles__boardCell___1Cr_E {\n  border: 1px solid black;\n  position: relative;\n  flex: 1; }\n\n.styles__ship___1Qj4U {\n  position: absolute;\n  top: 60%;\n  left: 50%;\n  transform: translate(-50%, -50%);\n  font-size: 64px; }\n\n.styles__empty___1n50P {\n  height: 100%;\n  cursor: pointer; }\n\n.styles__destroyed___LBC24 {\n  background-color: red; }\n", ""]);
 
 	// exports
 	exports.locals = {
@@ -46261,30 +46289,153 @@
 /* 365 */
 /***/ function(module, exports, __webpack_require__) {
 
-	/* injects from baggage-loader */
-	"use strict";
-	var phases_1 = __webpack_require__(366);
-	var message = function (gameState) {
-	    switch (gameState.phase) {
-	        case phases_1.PLACE_SHIPS:
-	            return "Place all 5 of your ships";
-	        case phases_1.GUESS:
-	            return "Can you guess where CPU placed their ship?";
-	        case phases_1.OVER:
-	            return "You have " + (gameState.won ? "Won" : "Lost") + "!";
-	        case phases_1.WAITING_FOR_CPU:
-	            return "Waiting for CPU's move";
-	        default:
-	            "";
-	    }
-	};
-	exports.GameState = function (props) { return (React.createElement("div", null, 
-	    React.createElement("div", null, message(props.gameState)), 
-	    (props.gameState.phase == phases_1.OVER) ? React.createElement("a", {onClick: props.newGame}, "Click here to start a new game") : "")); };
+	var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
+	  Copyright (c) 2016 Jed Watson.
+	  Licensed under the MIT License (MIT), see
+	  http://jedwatson.github.io/classnames
+	*/
+	/* global define */
+
+	(function () {
+		'use strict';
+
+		var hasOwn = {}.hasOwnProperty;
+
+		function classNames () {
+			var classes = [];
+
+			for (var i = 0; i < arguments.length; i++) {
+				var arg = arguments[i];
+				if (!arg) continue;
+
+				var argType = typeof arg;
+
+				if (argType === 'string' || argType === 'number') {
+					classes.push(arg);
+				} else if (Array.isArray(arg)) {
+					classes.push(classNames.apply(null, arg));
+				} else if (argType === 'object') {
+					for (var key in arg) {
+						if (hasOwn.call(arg, key) && arg[key]) {
+							classes.push(key);
+						}
+					}
+				}
+			}
+
+			return classes.join(' ');
+		}
+
+		if (typeof module !== 'undefined' && module.exports) {
+			module.exports = classNames;
+		} else if (true) {
+			// register as 'classnames', consistent with npm package name
+			!(__WEBPACK_AMD_DEFINE_ARRAY__ = [], __WEBPACK_AMD_DEFINE_RESULT__ = function () {
+				return classNames;
+			}.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__), __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
+		} else {
+			window.classNames = classNames;
+		}
+	}());
 
 
 /***/ },
 /* 366 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	/* injects from baggage-loader */
+	var styles = __webpack_require__(367);
+	var phases_1 = __webpack_require__(369);
+	var constants_1 = __webpack_require__(370);
+	var genMessageInfo = function (gameState) {
+	    switch (gameState.phase) {
+	        case phases_1.PLACE_SHIPS:
+	            return {
+	                message: "Place all " + constants_1.NUMBER_OF_SHIPS + " of your ships",
+	                style: "messageLeft",
+	            };
+	        case phases_1.GUESS:
+	            return {
+	                message: "Can you guess where CPU placed their ships?",
+	                style: "messageRight",
+	            };
+	        case phases_1.OVER:
+	            return {
+	                message: "You have " + (gameState.won ? "Won" : "Lost") + "!",
+	                style: "messageCenter"
+	            };
+	        case phases_1.WAITING_FOR_CPU:
+	            return {
+	                message: "Waiting for CPU",
+	                style: "messageCenter",
+	            };
+	        default:
+	            return {
+	                message: "",
+	                style: "",
+	            };
+	    }
+	};
+	var Message = CSSModules(styles)(function (props) {
+	    var messageInfo = genMessageInfo(props.gameState);
+	    return React.createElement("div", {styleName: messageInfo.style}, messageInfo.message);
+	});
+	exports.GameState = CSSModules(styles)(function (props) {
+	    return React.createElement("div", {styleName: "message"}, 
+	        React.createElement(Message, {gameState: props.gameState}), 
+	        (props.gameState.phase == phases_1.OVER) ? React.createElement("a", {styleName: "newGame", onClick: props.newGame}, "Click here to start a new game") : "");
+	});
+
+
+/***/ },
+/* 367 */
+/***/ function(module, exports, __webpack_require__) {
+
+	// style-loader: Adds some css to the DOM by adding a <style> tag
+
+	// load the styles
+	var content = __webpack_require__(368);
+	if(typeof content === 'string') content = [[module.id, content, '']];
+	// add the styles to the DOM
+	var update = __webpack_require__(355)(content, {});
+	if(content.locals) module.exports = content.locals;
+	// Hot Module Replacement
+	if(false) {
+		// When the styles change, update the <style> tags
+		if(!content.locals) {
+			module.hot.accept("!!./../../node_modules/css-loader/index.js?minify&modules&importLoaders=1&localIdentName=[name]__[local]___[hash:base64:5]!./../../node_modules/sass-loader/index.js!./styles.scss", function() {
+				var newContent = require("!!./../../node_modules/css-loader/index.js?minify&modules&importLoaders=1&localIdentName=[name]__[local]___[hash:base64:5]!./../../node_modules/sass-loader/index.js!./styles.scss");
+				if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
+				update(newContent);
+			});
+		}
+		// When the module is disposed, remove the <style> tags
+		module.hot.dispose(function() { update(); });
+	}
+
+/***/ },
+/* 368 */
+/***/ function(module, exports, __webpack_require__) {
+
+	exports = module.exports = __webpack_require__(354)();
+	// imports
+
+
+	// module
+	exports.push([module.id, ".styles__message___1zP6S {\n  margin-top: 30px;\n  font-size: 35px; }\n\n.styles__messageCenter___2vuJE {\n  text-align: center; }\n\n.styles__messageLeft___2RoTs {\n  text-align: left; }\n\n.styles__messageRight___gXxEa {\n  text-align: right; }\n\n.styles__newGame___123nZ {\n  display: block;\n  margin: auto; }\n", ""]);
+
+	// exports
+	exports.locals = {
+		"message": "styles__message___1zP6S",
+		"messageCenter": "styles__messageCenter___2vuJE",
+		"messageLeft": "styles__messageLeft___2RoTs",
+		"messageRight": "styles__messageRight___gXxEa",
+		"newGame": "styles__newGame___123nZ"
+	};
+
+/***/ },
+/* 369 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -46295,11 +46446,76 @@
 
 
 /***/ },
-/* 367 */
+/* 370 */
+/***/ function(module, exports) {
+
+	"use strict";
+	exports.NUMBER_OF_SHIPS = 10;
+	exports.BOARD_SIZE = 5;
+
+
+/***/ },
+/* 371 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
-	var api_1 = __webpack_require__(368);
+	/* injects from baggage-loader */
+	var styles = __webpack_require__(372);
+	exports.BoardHeaders = CSSModules(styles)(function () { return (React.createElement("div", {styleName: "headers"}, 
+	    React.createElement("div", null, "Your Board"), 
+	    React.createElement("div", null, "CPU Board"))); });
+
+
+/***/ },
+/* 372 */
+/***/ function(module, exports, __webpack_require__) {
+
+	// style-loader: Adds some css to the DOM by adding a <style> tag
+
+	// load the styles
+	var content = __webpack_require__(373);
+	if(typeof content === 'string') content = [[module.id, content, '']];
+	// add the styles to the DOM
+	var update = __webpack_require__(355)(content, {});
+	if(content.locals) module.exports = content.locals;
+	// Hot Module Replacement
+	if(false) {
+		// When the styles change, update the <style> tags
+		if(!content.locals) {
+			module.hot.accept("!!./../../node_modules/css-loader/index.js?minify&modules&importLoaders=1&localIdentName=[name]__[local]___[hash:base64:5]!./../../node_modules/sass-loader/index.js!./styles.scss", function() {
+				var newContent = require("!!./../../node_modules/css-loader/index.js?minify&modules&importLoaders=1&localIdentName=[name]__[local]___[hash:base64:5]!./../../node_modules/sass-loader/index.js!./styles.scss");
+				if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
+				update(newContent);
+			});
+		}
+		// When the module is disposed, remove the <style> tags
+		module.hot.dispose(function() { update(); });
+	}
+
+/***/ },
+/* 373 */
+/***/ function(module, exports, __webpack_require__) {
+
+	exports = module.exports = __webpack_require__(354)();
+	// imports
+
+
+	// module
+	exports.push([module.id, ".styles__headers___3uFLS {\n  display: flex;\n  justify-content: space-between;\n  flex-direction: row; }\n  .styles__headers___3uFLS > div {\n    display: inline-block;\n    font-size: 30px; }\n", ""]);
+
+	// exports
+	exports.locals = {
+		"headers": "styles__headers___3uFLS"
+	};
+
+/***/ },
+/* 374 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	var api_1 = __webpack_require__(375);
+	var reducer_1 = __webpack_require__(377);
+	var constants_1 = __webpack_require__(370);
 	//actions type
 	exports.LOAD_GAME = "LOAD_GAME";
 	exports.GUESS = "GUESS";
@@ -46307,6 +46523,7 @@
 	exports.PLAYER_PLACE_SHIP = "PLAYER_PLACE_SHIP";
 	exports.WAITING_FOR_CPU = "WAITING_FOR_CPU";
 	exports.CPU_GUESS = "CPU_GUESS";
+	exports.LOAD_CPU_BOARD = "LOAD_CPU_BOARD";
 	exports.playerPlaceShip = function (coordinates) { return ({
 	    type: exports.PLAYER_PLACE_SHIP,
 	    coordinates: coordinates,
@@ -46315,15 +46532,10 @@
 	    type: exports.CPU_PLACE_SHIPS,
 	    board: board,
 	}); };
-	var responseToState = function (game) { return ({
-	    board: game.playerBoard,
-	    gameState: (Object.keys(game).length === 0) ? undefined : _.pick(game, ["phase", "won"]),
-	}); };
 	//This is an open issue in rails https://github.com/rails/rails/issues/23640
 	var fixNestedArraysForRails = function (board) { return board.reduce(function (total, row) { return total.concat(row); }); };
 	exports.getGame = function () { return (function (dispatch, getState) {
-	    api_1.default.show().then(function (response) {
-	        var game = response && response.data.attributes;
+	    api_1.default.show().then(function (game) {
 	        if (game) {
 	            dispatch(exports.loadGame(game));
 	        }
@@ -46331,16 +46543,16 @@
 	}); };
 	exports.loadGame = function (game) { return ({
 	    type: exports.LOAD_GAME,
-	    game: responseToState(game),
+	    game: game,
 	}); };
 	var countShips = function (board) { return (_.sum(board.map(function (row) {
-	    return row.filter(function (cell) { return cell.ship && !cell.enemy; }).length;
+	    return row.filter(function (cell) { return cell.ship; }).length;
 	}))); };
 	exports.submitShips = function () { return (function (dispatch, getState) {
-	    if (countShips(getState().board) === 5) {
-	        api_1.default.create(getState()).then(function (response) {
-	            var game = response.data.attributes;
-	            dispatch(exports.loadGame(game));
+	    if (countShips(getState().playerBoard) === constants_1.NUMBER_OF_SHIPS) {
+	        dispatch(reducer_1.waitForCpu());
+	        api_1.default.create(getState()).then(function (game) {
+	            return dispatch(exports.loadGame(game));
 	        });
 	    }
 	}); };
@@ -46348,34 +46560,53 @@
 	    dispatch(exports.playerPlaceShip(coordinates));
 	    dispatch(exports.submitShips());
 	}); };
+	var loadCpuBoard = function (cpuBoard) { return ({
+	    type: exports.LOAD_CPU_BOARD,
+	    cpuBoard: cpuBoard,
+	}); };
 	exports.submitGuess = function (coordinate) { return (function (dispatch, getState) {
-	    api_1.default.guess([coordinate.x, coordinate.y]).then(function (response) {
-	        var game = response.data.attributes;
-	        dispatch(exports.loadGame(game));
+	    api_1.default.guess([coordinate.x, coordinate.y]).then(function (game) {
+	        dispatch(loadCpuBoard(game.cpuBoard));
+	        dispatch(reducer_1.waitForCpu());
+	        setTimeout(function () {
+	            dispatch(exports.loadGame(game));
+	        }, 1000);
 	    });
 	}); };
 	exports.newGame = function () { return exports.loadGame({}); };
 
 
 /***/ },
-/* 368 */
+/* 375 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
-	var fetch_1 = __webpack_require__(369);
+	var fetch_1 = __webpack_require__(376);
 	var base = "/game";
 	//remove when rails bug with nested arrays is fixed
 	var cleanBoard = function (_a) {
-	    var board = _a.board, gameState = _a.gameState;
+	    var playerBoard = _a.playerBoard, cpuBoard = _a.cpuBoard, gameState = _a.gameState;
 	    return ({
-	        board: board.reduce(function (total, row) { return total.concat(row); }),
+	        playerBoard: playerBoard.reduce(function (total, row) { return total.concat(row); }),
+	        cpuBoard: cpuBoard.reduce(function (total, row) { return total.concat(row); }),
 	        gameState: gameState
 	    });
 	};
+	var responseToState = function (response) {
+	    if (!(response && response.data && response.data.attributes)) {
+	        return null;
+	    }
+	    var game = response.data.attributes;
+	    return {
+	        playerBoard: game.playerBoard,
+	        cpuBoard: game.cpuBoard,
+	        gameState: (Object.keys(game).length === 0) ? undefined : _.pick(game, ["phase", "won"]),
+	    };
+	};
 	var GameApi = {
-	    show: function () { return fetch_1.Fetch.get(base); },
-	    create: function (game) { return fetch_1.Fetch.post(base, { game: cleanBoard(game) }); },
-	    update: function (game) { return fetch_1.Fetch.patch(base, { game: game }); },
+	    show: function () { return fetch_1.Fetch.get(base).then(responseToState); },
+	    create: function (game) { return fetch_1.Fetch.post(base, { game: cleanBoard(game) }).then(responseToState); },
+	    update: function (game) { return fetch_1.Fetch.patch(base, { game: game }).then(responseToState); },
 	    guess: function (guess) { return GameApi.update({ guess: guess }); },
 	    destroy: function () { return fetch_1.Fetch.delete(base); },
 	};
@@ -46384,7 +46615,7 @@
 
 
 /***/ },
-/* 369 */
+/* 376 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -46422,34 +46653,23 @@
 
 
 /***/ },
-/* 370 */
+/* 377 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
-	var redux_1 = __webpack_require__(173);
-	var reducer_1 = __webpack_require__(371);
-	var reducer_2 = __webpack_require__(372);
-	exports.GameReducer = redux_1.combineReducers({
-	    board: reducer_2.boardReducer,
-	    gameState: reducer_1.gameStateReducer,
-	});
-
-
-/***/ },
-/* 371 */
-/***/ function(module, exports, __webpack_require__) {
-
-	"use strict";
-	var actions_1 = __webpack_require__(367);
-	var phases_1 = __webpack_require__(366);
+	var phases_1 = __webpack_require__(369);
 	var initialState = {
 	    phase: phases_1.PLACE_SHIPS,
 	};
+	var WAIT_FOR_CPU = "WAIT_FOR_CPU";
+	exports.waitForCpu = function () { return ({
+	    type: WAIT_FOR_CPU
+	}); };
 	exports.gameStateReducer = function (state, action) {
 	    if (state === void 0) { state = initialState; }
 	    switch (action.type) {
-	        case actions_1.LOAD_GAME:
-	            return action.game.gameState || initialState;
+	        case WAIT_FOR_CPU:
+	            return _.merge({}, { phase: phases_1.WAITING_FOR_CPU });
 	        default:
 	            return state;
 	    }
@@ -46457,28 +46677,55 @@
 
 
 /***/ },
-/* 372 */
+/* 378 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
-	var reducer_1 = __webpack_require__(373);
-	var actions_1 = __webpack_require__(367);
-	var initialState = _.range(0, 5).map(function () {
-	    return _.range(0, 5).map(function () { return ({
+	var redux_1 = __webpack_require__(173);
+	var reducer_1 = __webpack_require__(377);
+	var reducer_2 = __webpack_require__(379);
+	var actions_1 = __webpack_require__(374);
+	var combinedReducer = redux_1.combineReducers({
+	    playerBoard: reducer_2.boardReducer,
+	    cpuBoard: reducer_2.boardReducer,
+	    gameState: reducer_1.gameStateReducer,
+	});
+	exports.GameReducer = function (state, action) {
+	    if (state === void 0) { state = {}; }
+	    switch (action.type) {
+	        case actions_1.PLAYER_PLACE_SHIP:
+	            return _.merge({}, state, { playerBoard: reducer_2.boardReducer(state.playerBoard, action) });
+	        case actions_1.LOAD_GAME:
+	            return combinedReducer(action.game, action);
+	        case actions_1.LOAD_CPU_BOARD:
+	            return _.merge({}, state, { cpuBoard: reducer_2.boardReducer(state.cpuBoard, action) });
+	        default:
+	            return combinedReducer(state, action);
+	    }
+	};
+
+
+/***/ },
+/* 379 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	var reducer_1 = __webpack_require__(380);
+	var actions_1 = __webpack_require__(374);
+	var constants_1 = __webpack_require__(370);
+	var initialState = _.range(0, constants_1.BOARD_SIZE).map(function () {
+	    return _.range(0, constants_1.BOARD_SIZE).map(function () { return ({
 	        ship: false,
 	        destroyed: false,
-	        enemy: false
 	    }); });
 	});
 	exports.boardReducer = function (state, action) {
 	    if (state === void 0) { state = initialState; }
 	    switch (action.type) {
-	        case actions_1.LOAD_GAME:
-	            return action.game.board || initialState;
 	        case actions_1.PLAYER_PLACE_SHIP:
 	            return state.map(function (boardRow, rowIndex) { return (rowIndex == action.coordinates.y) ? reducer_1.boardRowReducer(boardRow, action) : boardRow; });
-	        case actions_1.CPU_PLACE_SHIPS:
-	            return action.game.board;
+	        case actions_1.LOAD_CPU_BOARD:
+	            return action.cpuBoard;
 	        default:
 	            return state;
 	    }
@@ -46486,12 +46733,12 @@
 
 
 /***/ },
-/* 373 */
+/* 380 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
-	var actions_1 = __webpack_require__(367);
-	var reducer_1 = __webpack_require__(374);
+	var actions_1 = __webpack_require__(374);
+	var reducer_1 = __webpack_require__(381);
 	exports.boardRowReducer = function (state, action) {
 	    switch (action.type) {
 	        case actions_1.PLAYER_PLACE_SHIP:
@@ -46503,11 +46750,11 @@
 
 
 /***/ },
-/* 374 */
+/* 381 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
-	var actions_1 = __webpack_require__(367);
+	var actions_1 = __webpack_require__(374);
 	exports.boardCellReducer = function (state, action) {
 	    switch (action.type) {
 	        case actions_1.PLAYER_PLACE_SHIP:
