@@ -11,8 +11,8 @@ class GamesController < ApplicationController
 
   def create
     board = create_params[:playerBoard]
-    render json: nil, status: 422 and return unless board && board.length == 25
-    game = Game.from_player_cells(board.each_slice(5).to_a)
+    render json: nil, status: 422 and return unless board && board.length == (Board::BOARD_SIZE ** 2)
+    game = Game.from_player_cells(board.each_slice(Board::BOARD_SIZE).to_a)
     game.user = current_user
     if game.save
       render json: game

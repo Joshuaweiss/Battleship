@@ -1,9 +1,10 @@
 import {boardRowReducer} from "./boardRow/reducer";
 import {IBoard} from "./types";
 import {PLAYER_PLACE_SHIP, LOAD_CPU_BOARD} from "../game/actions";
+import {BOARD_SIZE} from "../utils/constants";
 
-const initialState = _.range(0, 5).map(() =>
-  _.range(0, 5).map(() => ({
+const initialState = _.range(0, BOARD_SIZE).map(() =>
+  _.range(0, BOARD_SIZE).map(() => ({
     ship: false,
     destroyed: false,
   }))

@@ -7,7 +7,8 @@ class Board
     destroyed: false,
   }
 
-  NUMBER_OF_SHIPS = 5
+  BOARD_SIZE = 5
+  NUMBER_OF_SHIPS = 10
 
   attr_accessor :cells
 
@@ -20,7 +21,7 @@ class Board
   end
 
   def initialize(board_cells = nil)
-    board_cells ||= 5.times.collect { 5.times.collect { DEFAULT_CELL.dup } }
+    board_cells ||= BOARD_SIZE.times.collect { BOARD_SIZE.times.collect { DEFAULT_CELL.dup } }
     self.cells = board_cells.map! do |board_row|
       board_row.map! do |board_cell|
         #keys to symbols
@@ -32,7 +33,7 @@ class Board
   end
 
   def cell_coordinates_where(test)
-    (0...5).to_a.repeated_permutation(2).select do |coordinate|
+    (0...BOARD_SIZE).to_a.repeated_permutation(2).select do |coordinate|
       cell = cell_at_coordinate(coordinate)
       cell.to_a.all? {|key, value| !test.has_key?(key) || test[key] == value}
     end

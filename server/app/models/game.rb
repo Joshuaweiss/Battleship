@@ -31,7 +31,7 @@ class Game < ApplicationRecord
 
   def cpu_guess
     cell = cell_at_coordinate(coordinate)
-    cell[:destroyed] = true 
+    cell[:destroyed] = true
     player_board.set_cell_at_coordinate(coordinate, cell)
   end
 
