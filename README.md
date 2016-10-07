@@ -3,7 +3,7 @@
 
 ## Install
 
-### Browser (Not needed checked in compiled assets)
+### Browser (Not needed the compiled assets are checked in)
 
 1. ```cd browser```
 2. ```npm install```
