@@ -5,11 +5,13 @@ import {
   OVER,
 } from "./phases";
 
+import {NUMBER_OF_SHIPS} from "../utils/constants";
+
 const genMessageInfo = (gameState) => {
   switch (gameState.phase) {
     case PLACE_SHIPS:
       return {
-        message: "Place all 5 of your ships",
+        message: `Place all ${NUMBER_OF_SHIPS} of your ships`,
         style: "messageLeft",
       }
     case GUESS:

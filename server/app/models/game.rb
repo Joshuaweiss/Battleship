@@ -5,7 +5,7 @@ class Game < ApplicationRecord
   serialize :player_board, Board
   serialize :cpu_board, Board
 
-  validate :players_have_5_ships
+  validate :players_have_all_ships
 
   belongs_to :user
 
@@ -45,9 +45,9 @@ class Game < ApplicationRecord
     end
   end
 
-  def players_have_5_ships
+  def players_have_all_ships
     [:player_board, :cpu_board].each do |board|
-      errors.add(board, "#{board} does not have 5 ships") unless self.send(board).cell_coordinates_where(ship: true).count == 5
+      errors.add(board, "#{board} does not have #{Board::NUMBER_OF_SHIPS} ships") unless self.send(board).cell_coordinates_where(ship: true).count == Board::NUMBER_OF_SHIPS
     end
   end
 

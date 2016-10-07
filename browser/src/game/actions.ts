@@ -3,6 +3,8 @@ import GameApi from "./api";
 
 import {waitForCpu} from "../gameState/reducer";
 
+import {NUMBER_OF_SHIPS} from "../utils/constants";
+
 //actions type
 export const LOAD_GAME = "LOAD_GAME";
 export const GUESS = "GUESS";
@@ -52,7 +54,7 @@ const countShips = (board) => (
 
 export const submitShips = () => (
   (dispatch, getState) => {
-    if (countShips(getState().playerBoard) === 5) {
+    if (countShips(getState().playerBoard) === NUMBER_OF_SHIPS) {
       dispatch(waitForCpu());
       GameApi.create(getState()).then((game) =>
         dispatch(loadGame(game))

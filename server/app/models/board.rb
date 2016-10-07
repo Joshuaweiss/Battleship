@@ -7,11 +7,13 @@ class Board
     destroyed: false,
   }
 
+  NUMBER_OF_SHIPS = 5
+
   attr_accessor :cells
 
   def self.with_cpu_ships
     board = Board.new
-    board.cell_coordinates_where(ship: false).shuffle.first(5).each do |coordinate|
+    board.cell_coordinates_where(ship: false).shuffle.first(NUMBER_OF_SHIPS).each do |coordinate|
       board.set_cell_at_coordinate(coordinate, {ship: true, destroyed: false})
     end
     board
